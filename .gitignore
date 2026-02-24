@@ -1,0 +1,12 @@
+*.pyc
+*__pycache__*
+db.sqlite3
+.DS_Store
+.gemini/
+.agent/
+brain/
+venv/
+.env
+.vscode/
+static_root/
+media_root/

@@ -1,0 +1,226 @@
+===============================================
+  8 STEPS TO CREATE A DJANGO PROJECT
+===============================================
+
+STEP 1 - Install Django
+-----------------------
+Command: pip install django
+
+  Installs the Django framework using pip (Python Package Installer).
+  Make sure Python and pip are already installed on your system.
+
+-----------------------------------------------
+
+STEP 2 - Verify Django Installation
+------------------------------------
+Command: python -m django --version
+
+  Confirms that Django was installed successfully and shows
+  the installed version number.
+
+-----------------------------------------------
+
+STEP 3 - Create a New Django Project
+--------------------------------------
+Command: django-admin startproject myproject
+
+  Creates a new Django project named "myproject".
+  Replace "myproject" with your desired project name.
+  This generates the project folder structure including
+  manage.py and the core settings files.
+
+-----------------------------------------------
+
+STEP 4 - Navigate Into the Project Directory
+---------------------------------------------
+Command: cd myproject
+
+  Moves into the newly created project directory so that
+  further commands are run in the correct location.
+
+-----------------------------------------------
+
+STEP 5 - Create a Django App
+-----------------------------
+Command: python manage.py startapp myapp
+
+  Creates a new Django application named "myapp" inside the project.
+  Replace "myapp" with your desired app name.
+  Remember to add the app to INSTALLED_APPS in settings.py.
+
+-----------------------------------------------
+
+STEP 6 - Create and Apply Migrations
+--------------------------------------
+Command: python manage.py makemigrations
+
+  Scans your models and creates migration files that describe
+  the changes to be applied to the database schema.
+  Run this every time you add or modify a model.
+
+Command: python manage.py migrate
+
+  Applies the migration files to the database.
+  This creates the necessary tables in the database.
+  Always run this after makemigrations.
+
+-----------------------------------------------
+
+STEP 7 - Create a Superuser (Admin Account)
+--------------------------------------------
+Command: python manage.py createsuperuser
+
+  Creates an admin/superuser account for the Django Admin panel.
+  You will be prompted to enter:
+    - Username
+    - Email address
+    - Password (entered twice for confirmation)
+  After creation, visit http://127.0.0.1:8000/admin/ to log in.
+
+-----------------------------------------------
+
+STEP 8 - Run the Development Server
+-------------------------------------
+Command: python manage.py runserver
+
+  Starts the Django built-in development server.
+  Open your browser and visit: http://127.0.0.1:8000/
+  to see your project running.
+  Press CTRL+C to stop the server.
+
+===============================================
+  QUICK REFERENCE SUMMARY
+===============================================
+
+  1. pip install django
+  2. python -m django --version
+  3. django-admin startproject myproject
+  4. cd myproject
+  5. python manage.py startapp myapp
+  6. python manage.py makemigrations
+     python manage.py migrate
+  7. python manage.py createsuperuser
+  8. python manage.py runserver
+
+===============================================
+
+
+===============================================
+  HOW DJANGO WORKS - REQUEST/RESPONSE FLOW
+===============================================
+
+  [ USER / BROWSER ]
+         |
+         |  (1) HTTP Request (e.g. GET /home/)
+         v
+  +-------------------------------+
+  |        WEB SERVER             |
+  |  (e.g. Gunicorn / Nginx)      |
+  +-------------------------------+
+         |
+         |  (2) Forwards request to Django
+         v
+  +-------------------------------+
+  |         WSGI / ASGI           |
+  |   (Django Entry Point)        |
+  +-------------------------------+
+         |
+         |  (3) Passes through Middleware
+         v
+  +-------------------------------+
+  |         MIDDLEWARE             |
+  |  (Security, Sessions, Auth,   |
+  |   CSRF, etc.)                 |
+  +-------------------------------+
+         |
+         |  (4) URL Dispatcher reads urls.py
+         v
+  +-------------------------------+
+  |        URL RESOLVER           |
+  |       (urls.py)               |
+  |  Matches URL pattern to View  |
+  +-------------------------------+
+         |
+         |  (5) Calls the matched View
+         v
+  +-------------------------------+
+  |          VIEW                 |
+  |    (views.py)                 |
+  |  Contains the business logic  |
+  +------+----------------+-------+
+         |                |
+   (6a) Query DB    (6b) Prepare Data
+         |                |
+         v                |
+  +------+--------+       |
+  |     MODEL     |       |
+  |  (models.py)  |       |
+  |  Django ORM   |       |
+  +------+--------+       |
+         |                |
+         v                |
+  +------+--------+       |
+  |   DATABASE    |       |
+  | (SQLite/PgSQL |       |
+  |  MySQL, etc.) |       |
+  +------+--------+       |
+         |                |
+   (7) Returns data       |
+         |                |
+         +------> View <--+
+                    |
+             (8) Sends data to Template
+                    v
+  +-------------------------------+
+  |         TEMPLATE              |
+  |   (templates/*.html)          |
+  |  Renders HTML with context    |
+  +-------------------------------+
+         |
+         |  (9) Rendered HTML Response
+         v
+  +-------------------------------+
+  |         MIDDLEWARE             |
+  |  (Response processing)        |
+  +-------------------------------+
+         |
+         |  (10) HTTP Response sent back
+         v
+  [ USER / BROWSER ]
+  (Displays the web page)
+
+-----------------------------------------------
+
+  COMPONENT SUMMARY
+  -----------------
+
+  urls.py    --> Maps URL patterns to Views
+  views.py   --> Handles logic, fetches data, returns response
+  models.py  --> Defines database structure (tables/fields)
+  Django ORM --> Translates Python code to SQL queries
+  Database   --> Stores and retrieves actual data
+  templates/ --> HTML files rendered with dynamic data
+  settings.py--> Global config (DB, apps, middleware, etc.)
+  admin.py   --> Registers models in Django Admin panel
+  forms.py   --> Handles form creation and validation
+  Middleware --> Hooks that process requests and responses
+
+-----------------------------------------------
+
+  DJANGO MVT ARCHITECTURE
+  ------------------------
+
+        M  -  Model    (models.py)  --> Data Layer
+        V  -  View     (views.py)   --> Logic Layer
+        T  -  Template (*.html)     --> Presentation Layer
+
+  Django follows MVT (Model-View-Template) pattern,
+  which is similar to the traditional MVC pattern:
+
+    MVC              MVT (Django)
+    --------         ----------------
+    Model       -->  Model   (models.py)
+    Controller  -->  View    (views.py)
+    View        -->  Template (templates/)
+
+===============================================

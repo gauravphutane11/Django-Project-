@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Project Gaurav</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #6c63ff;
+            --secondary: #f64f59;
+            --accent: #43e97b;
+            --dark: #0a0a0f;
+            --card-bg: rgba(255,255,255,0.04);
+            --text: #f0f0f0;
+            --muted: #888;
+            --border: rgba(255,255,255,0.08);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+        /* ── CANVAS ── */
+        #particles-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 60px;
+            background: rgba(10,10,15,0.75);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: padding 0.3s;
+        }
+
+        nav .logo {
+            font-size: 22px; font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        nav .nav-links { display: flex; gap: 10px; align-items: center; }
+
+        nav .nav-links a {
+            color: var(--muted); text-decoration: none;
+            font-size: 14px; font-weight: 500;
+            padding: 8px 16px; border-radius: 8px; transition: all 0.25s;
+        }
+
+        nav .nav-links a:hover { color: var(--text); background: var(--card-bg); }
+
+        nav .nav-links .btn-nav {
+            background: linear-gradient(135deg, var(--primary), #a78bfa);
+            color: white !important; padding: 9px 20px;
+            border-radius: 8px; font-weight: 600;
+        }
+
+        nav .nav-links .btn-nav:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(108,99,255,0.5); }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative; z-index: 1;
+            min-height: 60vh;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center;
+            padding: 140px 20px 80px;
+        }
+
+        .orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px);
+            animation: floatOrb 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .orb-1 { width: 380px; height: 380px; background: rgba(108,99,255,0.18); top: 0; left: -5%; animation-delay: 0s; }
+        .orb-2 { width: 280px; height: 280px; background: rgba(246,79,89,0.13); top: 10%; right: -5%; animation-delay: -3s; }
+        .orb-3 { width: 200px; height: 200px; background: rgba(67,233,123,0.1); bottom: 0; left: 40%; animation-delay: -5s; }
+
+        @keyframes floatOrb {
+            0%,100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.07); }
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(108,99,255,0.15);
+            border: 1px solid rgba(108,99,255,0.35);
+            color: #a78bfa; font-size: 13px; font-weight: 600;
+            padding: 7px 16px; border-radius: 100px; margin-bottom: 24px;
+            animation: fadeDown 0.8s ease both;
+        }
+
+        .hero-badge .dot {
+            width: 7px; height: 7px;
+            background: var(--accent); border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.5);opacity:0.6;} }
+
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 80px);
+            font-weight: 900; letter-spacing: -2px; line-height: 1.05;
+            margin-bottom: 20px;
+            animation: fadeUp 0.9s ease 0.15s both;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, #c084fc 50%, var(--secondary) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .hero p {
+            font-size: clamp(15px, 2vw, 19px);
+            color: var(--muted); max-width: 540px; line-height: 1.7;
+            margin-bottom: 36px;
+            animation: fadeUp 0.9s ease 0.3s both;
+        }
+
+        .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; animation: fadeUp 0.9s ease 0.45s both; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #a78bfa);
+            color: white; padding: 13px 30px; border-radius: 12px;
+            font-size: 15px; font-weight: 700; text-decoration: none;
+            transition: all 0.3s; box-shadow: 0 4px 30px rgba(108,99,255,0.4);
+            position: relative; overflow: hidden;
+        }
+        .btn-primary::before {
+            content: ''; position: absolute;
+            top: -50%; left: -60%; width: 60%; height: 200%;
+            background: rgba(255,255,255,0.15);
+            transform: skewX(-20deg); transition: left 0.4s;
+        }
+        .btn-primary:hover::before { left: 130%; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(108,99,255,0.6); }
+
+        .btn-secondary {
+            color: var(--text); padding: 13px 30px; border-radius: 12px;
+            font-size: 15px; font-weight: 600; text-decoration: none;
+            border: 1px solid var(--border); background: var(--card-bg);
+            transition: all 0.3s; backdrop-filter: blur(10px);
+        }
+        .btn-secondary:hover { border-color: var(--primary); background: rgba(108,99,255,0.1); transform: translateY(-3px); }
+
+        /* ── MISSION ── */
+        .mission-section {
+            position: relative; z-index: 1;
+            padding: 80px 60px;
+            max-width: 1100px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: rgba(108,99,255,0.15); color: #a78bfa;
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            padding: 5px 14px; border-radius: 100px; margin-bottom: 16px;
+        }
+
+        .mission-text h2 { font-size: clamp(26px, 3.5vw, 42px); font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; }
+        .mission-text p { color: var(--muted); font-size: 15px; line-height: 1.8; margin-bottom: 14px; }
+
+        .mission-visual {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px; padding: 40px;
+            display: flex; flex-direction: column; gap: 16px;
+            position: relative; overflow: hidden;
+        }
+
+        .mission-visual::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(108,99,255,0.07), transparent);
+        }
+
+        .mission-stat {
+            display: flex; align-items: center; gap: 16px;
+            padding: 16px; border-radius: 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            position: relative; z-index: 1;
+            transition: all 0.3s;
+        }
+
+        .mission-stat:hover { border-color: rgba(108,99,255,0.4); transform: translateX(6px); }
+
+        .mission-stat-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; flex-shrink: 0;
+        }
+
+        .mission-stat h4 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+        .mission-stat p { font-size: 13px; color: var(--muted); margin: 0; }
+
+        /* ── TEAM ── */
+        .team-section {
+            position: relative; z-index: 1;
+            padding: 80px 60px;
+            background: rgba(255,255,255,0.015);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .team-inner { max-width: 1100px; margin: 0 auto; }
+
+        .section-header { text-align: center; margin-bottom: 56px; }
+        .section-header h2 { font-size: clamp(26px, 4vw, 44px); font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+        .section-header p { color: var(--muted); font-size: 16px; max-width: 480px; margin: 0 auto; line-height: 1.7; }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .team-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px; padding: 36px 28px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative; overflow: hidden;
+        }
+
+        .team-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(108,99,255,0.07), transparent);
+            opacity: 0; transition: opacity 0.3s;
+        }
+
+        .team-card:hover { transform: translateY(-10px); border-color: rgba(108,99,255,0.4); box-shadow: 0 24px 60px rgba(108,99,255,0.15); }
+        .team-card:hover::before { opacity: 1; }
+
+        .avatar-ring {
+            width: 90px; height: 90px; border-radius: 50%;
+            margin: 0 auto 20px;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--primary), #c084fc, var(--secondary));
+            position: relative; z-index: 1;
+        }
+
+        .avatar-inner {
+            width: 100%; height: 100%; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #a78bfa);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 34px; font-weight: 900; color: white;
+            background: var(--dark2, #111118);
+        }
+
+        .team-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; position: relative; z-index: 1; }
+
+        .team-role {
+            display: inline-block;
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase;
+            padding: 4px 12px; border-radius: 100px;
+            margin-bottom: 14px; position: relative; z-index: 1;
+        }
+
+        .team-card p { font-size: 14px; color: var(--muted); line-height: 1.7; position: relative; z-index: 1; }
+
+        .team-socials {
+            display: flex; justify-content: center; gap: 10px; margin-top: 18px;
+            position: relative; z-index: 1;
+        }
+
+        .social-btn {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; text-decoration: none;
+            transition: all 0.25s;
+        }
+
+        .social-btn:hover { border-color: var(--primary); background: rgba(108,99,255,0.15); transform: translateY(-3px); }
+
+        /* ── VALUES ── */
+        .values-section {
+            position: relative; z-index: 1;
+            padding: 80px 60px;
+            max-width: 1100px; margin: 0 auto;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px; margin-top: 50px;
+        }
+
+        .value-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 18px; padding: 28px;
+            transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .value-card:hover { transform: translateY(-6px); border-color: rgba(108,99,255,0.4); box-shadow: 0 16px 50px rgba(108,99,255,0.12); }
+
+        .value-icon { font-size: 28px; margin-bottom: 14px; }
+        .value-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .value-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+        /* ── TIMELINE ── */
+        .timeline-section {
+            position: relative; z-index: 1;
+            padding: 80px 60px;
+            background: rgba(255,255,255,0.015);
+            border-top: 1px solid var(--border);
+        }
+
+        .timeline-inner { max-width: 700px; margin: 0 auto; }
+
+        .timeline {
+            position: relative; margin-top: 48px;
+        }
+
+        .timeline::before {
+            content: ''; position: absolute;
+            left: 20px; top: 0; bottom: 0; width: 2px;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+        }
+
+        .timeline-item {
+            display: flex; gap: 24px;
+            margin-bottom: 36px; position: relative;
+        }
+
+        .timeline-dot {
+            width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary), #a78bfa);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; position: relative; z-index: 1;
+            box-shadow: 0 0 20px rgba(108,99,255,0.4);
+        }
+
+        .timeline-content {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 16px; padding: 20px 24px; flex: 1;
+            transition: all 0.3s;
+        }
+
+        .timeline-content:hover { border-color: rgba(108,99,255,0.35); transform: translateX(6px); }
+
+        .timeline-date { font-size: 12px; color: #a78bfa; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+        .timeline-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+        .timeline-content p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+        /* ── CTA ── */
+        .cta-section {
+            position: relative; z-index: 1;
+            padding: 100px 60px; text-align: center;
+            max-width: 800px; margin: 0 auto;
+        }
+
+        .cta-glow {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; height: 300px;
+            background: radial-gradient(ellipse, rgba(108,99,255,0.16) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-section h2 { font-size: clamp(26px, 4vw, 44px); font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; }
+        .cta-section p { color: var(--muted); font-size: 16px; line-height: 1.7; margin-bottom: 36px; }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative; z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 28px 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px;
+        }
+
+        footer .logo { font-size: 16px; font-weight: 800; background: linear-gradient(135deg, var(--primary), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        footer p { color: var(--muted); font-size: 13px; }
+        footer .footer-links { display: flex; gap: 20px; }
+        footer .footer-links a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        footer .footer-links a:hover { color: var(--text); }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            nav { padding: 14px 20px; }
+            .mission-section { grid-template-columns: 1fr; gap: 30px; }
+            .hero, .mission-section, .team-section, .values-section, .timeline-section, .cta-section, footer { padding-left: 20px; padding-right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+    <span class="logo">⚡ Project Gaurav</span>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="#team">Team</a>
+        <a href="#values">Values</a>
+        <a href="/admin/" class="btn-nav">Admin Panel →</a>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="hero-badge">
+        <span class="dot"></span>
+        Our Story & Vision
+    </div>
+
+    <h1>The People<br>Behind <span class="gradient-text">the Magic</span></h1>
+
+    <p>
+        We're a passionate team building modern web applications with Django.
+        Clean code, great design, and a love for Python.
+    </p>
+
+    <div class="hero-cta">
+        <a href="#team" class="btn-primary">Meet the Team →</a>
+        <a href="/" class="btn-secondary">← Back to Home</a>
+    </div>
+</section>
+
+<!-- ── MISSION ── -->
+<section class="mission-section">
+    <div class="mission-text reveal">
+        <div class="section-tag">Our Mission</div>
+        <h2>Building the Web, <span class="gradient-text">One View at a Time</span></h2>
+        <p>
+            Project Gaurav was created to explore the full power of Django — from URL routing
+            and template rendering to ORM-powered data management and admin interfaces.
+        </p>
+        <p>
+            We believe in clean architecture, readable code, and UIs that delight users.
+            Every component in this project is crafted with purpose.
+        </p>
+    </div>
+
+    <div class="mission-visual reveal">
+        <div class="mission-stat">
+            <div class="mission-stat-icon" style="background:rgba(108,99,255,0.15);">🎯</div>
+            <div>
+                <h4>Goal-Driven Development</h4>
+                <p>Every feature serves a clear purpose</p>
+            </div>
+        </div>
+        <div class="mission-stat">
+            <div class="mission-stat-icon" style="background:rgba(67,233,123,0.15);">🔒</div>
+            <div>
+                <h4>Security First</h4>
+                <p>CSRF, auth, and Django best practices</p>
+            </div>
+        </div>
+        <div class="mission-stat">
+            <div class="mission-stat-icon" style="background:rgba(246,79,89,0.15);">⚡</div>
+            <div>
+                <h4>Fast & Responsive</h4>
+                <p>Optimised templates and lean views</p>
+            </div>
+        </div>
+        <div class="mission-stat">
+            <div class="mission-stat-icon" style="background:rgba(251,191,36,0.15);">🧠</div>
+            <div>
+                <h4>MVT Architecture</h4>
+                <p>Model · View · Template — clean separation</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── TEAM ── -->
+<section class="team-section" id="team">
+    <div class="team-inner">
+        <div class="section-header reveal">
+            <div class="section-tag">The Team</div>
+            <h2>Meet the Builders</h2>
+            <p>Small team, big ambitions. Passionate about Python and the open web.</p>
+        </div>
+
+        <div class="team-grid">
+
+            <div class="team-card reveal" style="transition-delay:0.05s">
+                <div class="avatar-ring">
+                    <div class="avatar-inner" style="background:linear-gradient(135deg,#6c63ff,#a78bfa);font-size:34px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;">G</div>
+                </div>
+                <h3>Gaurav</h3>
+                <span class="team-role" style="background:rgba(108,99,255,0.15);color:#a78bfa;">Lead Developer</span>
+                <p>Full-stack developer passionate about Django, clean architecture, and building products that matter.</p>
+                <div class="team-socials">
+                    <a href="#" class="social-btn">🐙</a>
+                    <a href="#" class="social-btn">💼</a>
+                    <a href="#" class="social-btn">🐦</a>
+                </div>
+            </div>
+
+            <div class="team-card reveal" style="transition-delay:0.1s">
+                <div class="avatar-ring">
+                    <div class="avatar-inner" style="background:linear-gradient(135deg,#f64f59,#fc8181);font-size:34px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;">D</div>
+                </div>
+                <h3>Django Framework</h3>
+                <span class="team-role" style="background:rgba(67,233,123,0.15);color:#68d391;">The Backbone</span>
+                <p>The batteries-included Python web framework that makes it easier to build better web apps more quickly with less code.</p>
+                <div class="team-socials">
+                    <a href="https://djangoproject.com" class="social-btn">🌐</a>
+                    <a href="#" class="social-btn">📚</a>
+                </div>
+            </div>
+
+            <div class="team-card reveal" style="transition-delay:0.15s">
+                <div class="avatar-ring">
+                    <div class="avatar-inner" style="background:linear-gradient(135deg,#43e97b,#38f9d7);font-size:34px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;">P</div>
+                </div>
+                <h3>Python 3</h3>
+                <span class="team-role" style="background:rgba(251,191,36,0.15);color:#f6d860;">The Language</span>
+                <p>Simple, readable, and powerful. Python handles everything from ORM queries to middleware and view logic.</p>
+                <div class="team-socials">
+                    <a href="https://python.org" class="social-btn">🌐</a>
+                    <a href="#" class="social-btn">📚</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ── VALUES ── -->
+<section class="values-section" id="values">
+    <div class="section-header reveal">
+        <div class="section-tag">What We Stand For</div>
+        <h2>Our Core Values</h2>
+        <p>The principles that guide how we write code and design products.</p>
+    </div>
+
+    <div class="values-grid">
+        <div class="value-card reveal" style="transition-delay:0.05s">
+            <div class="value-icon">🧩</div>
+            <h3>Modularity</h3>
+            <p>Every app, view, and model has a single responsibility. Clean separation keeps things maintainable.</p>
+        </div>
+        <div class="value-card reveal" style="transition-delay:0.1s">
+            <div class="value-icon">📖</div>
+            <h3>Readability</h3>
+            <p>Code is written once but read many times. We prioritise clarity over cleverness.</p>
+        </div>
+        <div class="value-card reveal" style="transition-delay:0.15s">
+            <div class="value-icon">🛡️</div>
+            <h3>Security</h3>
+            <p>CSRF protection, Django auth, ORM-safe queries — security is never an afterthought.</p>
+        </div>
+        <div class="value-card reveal" style="transition-delay:0.2s">
+            <div class="value-icon">🚀</div>
+            <h3>Performance</h3>
+            <p>Lean templates, efficient queries, and proper use of Django's caching layer.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── TIMELINE ── -->
+<section class="timeline-section">
+    <div class="timeline-inner">
+        <div class="section-header reveal">
+            <div class="section-tag">Journey</div>
+            <h2>Project Milestones</h2>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item reveal">
+                <div class="timeline-dot">🚀</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">Step 1–4</div>
+                    <h4>Project Kickoff</h4>
+                    <p>Installed Django, created the project, set up virtual environment and folder structure.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-dot">⚙️</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">Step 5–6</div>
+                    <h4>App Creation & Database</h4>
+                    <p>Created the <code>software</code> app, defined models, ran migrations.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-dot">🔗</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">Step 10–12</div>
+                    <h4>URL Routing & Views</h4>
+                    <p>Wired up custom app <code>urls.py</code>, created function-based views for Home and About.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-dot">🎨</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">Latest</div>
+                    <h4>Premium UI</h4>
+                    <p>Redesigned both pages with animations, particles, dark theme, and responsive layouts.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+    <div class="cta-glow"></div>
+    <div class="section-tag reveal">What's Next?</div>
+    <h2 class="reveal">Ready to <span class="gradient-text">Contribute?</span></h2>
+    <p class="reveal">Explore the codebase, add new apps, and build on this solid Django foundation.</p>
+    <div class="hero-cta reveal">
+        <a href="/" class="btn-primary">← Back to Home</a>
+        <a href="/admin/" class="btn-secondary">Open Admin Panel</a>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <span class="logo">⚡ Project Gaurav</span>
+    <p>© 2026 Project Gaurav · Built with ❤️ using Django</p>
+    <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/aboutus">About</a>
+        <a href="/admin/">Admin</a>
+    </div>
+</footer>
+
+<script>
+    /* ── Particles ── */
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+
+    for (let i = 0; i < 110; i++) {
+        particles.push({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            r: Math.random() * 1.4 + 0.3,
+            dx: (Math.random() - 0.5) * 0.4, dy: (Math.random() - 0.5) * 0.4,
+            alpha: Math.random() * 0.45 + 0.1
+        });
+    }
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(108,99,255,${p.alpha})`; ctx.fill();
+            p.x += p.dx; p.y += p.dy;
+            if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        });
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                if (dist < 110) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(108,99,255,${0.07 * (1 - dist / 110)})`;
+                    ctx.lineWidth = 0.5; ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    /* ── Scroll Reveal ── */
+    const observer = new IntersectionObserver(
+        entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+        { threshold: 0.1 }
+    );
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ── Navbar shrink ── */
+    window.addEventListener('scroll', () => {
+        document.getElementById('navbar').style.padding = window.scrollY > 60 ? '12px 60px' : '18px 60px';
+    });
+
+    /* ── Mouse Parallax ── */
+    document.addEventListener('mousemove', e => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 30;
+        const y = (e.clientY / window.innerHeight - 0.5) * 30;
+        document.querySelectorAll('.orb').forEach((orb, i) => {
+            const f = (i + 1) * 0.4;
+            orb.style.transform = `translate(${x * f}px, ${y * f}px)`;
+        });
+    });
+</script>
+
+</body>
+</html>

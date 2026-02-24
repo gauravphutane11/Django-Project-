@@ -1,0 +1,396 @@
+===============================================
+  DJANGO FURTHER CONFIGURATION STEPS
+  (After Basic Project & App Creation)
+===============================================
+
+These steps continue from the 8 basic setup steps.
+Assume: project = "myproject" | app = "myapp"
+
+-----------------------------------------------
+
+STEP 9 - Register Your App in settings.py
+------------------------------------------
+File: myproject/settings.py
+
+  Open settings.py inside your project folder and find
+  the INSTALLED_APPS list. Add your app name to it.
+
+  INSTALLED_APPS = [
+      'django.contrib.admin',
+      'django.contrib.auth',
+      'django.contrib.contenttypes',
+      'django.contrib.sessions',
+      'django.contrib.messages',
+      'django.contrib.staticfiles',
+      'myapp',            <--- ADD THIS LINE
+  ]
+
+  WHY: Django won't recognize your app's models,
+  templates, or signals unless it's registered here.
+
+-----------------------------------------------
+
+STEP 10 - Create a Custom urls.py Inside Your App
+---------------------------------------------------
+File to create: myapp/urls.py
+
+  By default, Django does NOT create a urls.py file
+  inside the app folder. You must create it manually.
+
+  Create a new file called urls.py inside myapp/ and
+  add the following content:
+
+  --------------------------------------------------
+  from django.urls import path
+  from . import views
+
+  app_name = 'myapp'   # optional but recommended (namespace)
+
+  urlpatterns = [
+      path('', views.index, name='index'),
+      path('about/', views.about, name='about'),
+  ]
+  --------------------------------------------------
+
+  NOTES:
+  - 'path()' maps a URL pattern to a view function.
+  - 'name' gives the URL a label for reverse lookup.
+  - 'app_name' sets a namespace to avoid URL conflicts
+    when multiple apps have the same URL names.
+
+-----------------------------------------------
+
+STEP 11 - Include App URLs in Project urls.py
+-----------------------------------------------
+File to modify: myproject/urls.py
+
+  Open the main project urls.py and include your app's
+  URLs using include():
+
+  --------------------------------------------------
+  from django.contrib import admin
+  from django.urls import path, include     # <-- add include
+
+  urlpatterns = [
+      path('admin/', admin.site.urls),
+      path('', include('myapp.urls')),      # <-- ADD THIS
+  ]
+  --------------------------------------------------
+
+  ALTERNATELY, to mount the app at a sub-path:
+
+      path('myapp/', include('myapp.urls')),
+
+  WHY: The project urls.py is the entry point for all
+  URL routing. Without include(), Django will never
+  reach your app's URL patterns.
+
+-----------------------------------------------
+
+STEP 12 - Create Views in views.py
+------------------------------------
+File: myapp/views.py
+
+  A view is a Python function (or class) that receives
+  an HTTP request and returns an HTTP response.
+
+  --------------------------------------------------
+  from django.shortcuts import render
+  from django.http import HttpResponse
+
+  # Simple function-based view
+  def index(request):
+      context = {
+          'title': 'Home Page',
+          'message': 'Welcome to MyApp!',
+      }
+      return render(request, 'myapp/index.html', context)
+
+  def about(request):
+      return HttpResponse("<h1>About Page</h1>")
+  --------------------------------------------------
+
+  Two common ways to return a response:
+  - render()       --> renders an HTML template
+  - HttpResponse() --> returns raw text/HTML directly
+
+-----------------------------------------------
+
+STEP 13 - Create a Templates Folder & HTML Files
+--------------------------------------------------
+Folder structure to create:
+
+  myapp/
+  └── templates/
+      └── myapp/
+          └── index.html
+
+  Commands (from inside project root):
+    mkdir myapp\templates\myapp          (Windows)
+    mkdir -p myapp/templates/myapp       (Mac/Linux)
+
+  Then create index.html:
+
+  --------------------------------------------------
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>{{ title }}</title>
+  </head>
+  <body>
+      <h1>{{ message }}</h1>
+  </body>
+  </html>
+  --------------------------------------------------
+
+  WHY: Django looks for templates inside
+  <app>/templates/ by default. The extra app-named
+  subfolder (myapp/) avoids naming conflicts between
+  apps.
+
+-----------------------------------------------
+
+STEP 14 - Configure Templates in settings.py
+----------------------------------------------
+File: myproject/settings.py
+
+  Find the TEMPLATES setting and make sure
+  'APP_DIRS': True is set (it is by default):
+
+  TEMPLATES = [
+      {
+          'BACKEND': 'django.template.backends.django.DjangoTemplates',
+          'DIRS': [],          # add BASE_DIR/'templates' here for global templates
+          'APP_DIRS': True,    # <-- THIS must be True
+          ...
+      },
+  ]
+
+  For a project-level global templates folder, add:
+      'DIRS': [BASE_DIR / 'templates'],
+
+  Then create: myproject/templates/base.html
+
+-----------------------------------------------
+
+STEP 15 - Define a Model in models.py
+----------------------------------------
+File: myapp/models.py
+
+  A model maps to a database table.
+
+  --------------------------------------------------
+  from django.db import models
+
+  class Article(models.Model):
+      title   = models.CharField(max_length=200)
+      content = models.TextField()
+      created = models.DateTimeField(auto_now_add=True)
+
+      def __str__(self):
+          return self.title
+  --------------------------------------------------
+
+  After defining/changing models, always run:
+
+    python manage.py makemigrations
+    python manage.py migrate
+
+-----------------------------------------------
+
+STEP 16 - Register Model in admin.py
+--------------------------------------
+File: myapp/admin.py
+
+  --------------------------------------------------
+  from django.contrib import admin
+  from .models import Article
+
+  admin.site.register(Article)
+  --------------------------------------------------
+
+  WHY: This makes the model visible and manageable
+  in the Django Admin panel at /admin/.
+
+===============================================
+  BASIC MANDATORY DJANGO RULES
+===============================================
+
+  These are the most important rules every Django
+  developer must follow.
+
+  -----------------------------------------------
+
+  RULE 1 - Always Migrate After Model Changes
+  -------------------------------------------------
+  Whenever you add, edit, or remove a field or model:
+
+    python manage.py makemigrations
+    python manage.py migrate
+
+  Skipping this will cause database errors.
+
+  -----------------------------------------------
+
+  RULE 2 - Register Every New App in INSTALLED_APPS
+  ---------------------------------------------------
+  File: myproject/settings.py
+
+  Any app created with 'startapp' MUST be added to
+  INSTALLED_APPS, otherwise Django ignores it entirely.
+
+  -----------------------------------------------
+
+  RULE 3 - Never Commit Secret Key or Debug=True in Production
+  -------------------------------------------------------------
+  File: myproject/settings.py
+
+  - SECRET_KEY must be kept private. Move it to an
+    environment variable or a .env file.
+  - Set DEBUG = False in production.
+  - Set ALLOWED_HOSTS to your actual domain.
+
+  Example using python-decouple:
+    pip install python-decouple
+    SECRET_KEY = config('SECRET_KEY')
+    DEBUG = config('DEBUG', default=False, cast=bool)
+
+  -----------------------------------------------
+
+  RULE 4 - Always Use Django's ORM, Not Raw SQL
+  -----------------------------------------------
+  Use Django ORM querysets:
+
+    Article.objects.all()
+    Article.objects.filter(title__icontains='django')
+    Article.objects.get(id=1)
+
+  Avoid raw SQL unless absolutely necessary, as the
+  ORM handles SQL injection protection automatically.
+
+  -----------------------------------------------
+
+  RULE 5 - Use CSRF Token in Every HTML Form
+  -------------------------------------------
+  Every POST form in a Django template MUST include:
+
+    <form method="POST">
+        {% csrf_token %}
+        ...
+    </form>
+
+  Without this, Django will reject the form with a
+  403 Forbidden error.
+
+  -----------------------------------------------
+
+  RULE 6 - Use Named URLs with {% url %} Tag
+  -------------------------------------------
+  In templates, never hardcode URLs. Use the name
+  defined in urlpatterns:
+
+    GOOD:  <a href="{% url 'myapp:index' %}">Home</a>
+    BAD:   <a href="/myapp/">Home</a>
+
+  This stays correct even if you change URL paths.
+
+  -----------------------------------------------
+
+  RULE 7 - Keep Business Logic in Views or Models, Not Templates
+  ---------------------------------------------------------------
+  Templates should only display data.
+  - Heavy logic (queries, calculations) --> views.py
+    or model methods
+  - Templates should only use simple tags and filters.
+
+  -----------------------------------------------
+
+  RULE 8 - Use Virtual Environments
+  -----------------------------------
+  Always work inside a virtual environment:
+
+    python -m venv venv
+    venv\Scripts\activate        (Windows)
+    source venv/bin/activate     (Mac/Linux)
+    pip install django
+
+  This keeps dependencies isolated per project.
+
+  -----------------------------------------------
+
+  RULE 9 - Use .gitignore for Django Projects
+  --------------------------------------------
+  NEVER push these to version control:
+
+    - venv/              (virtual environment)
+    - __pycache__/       (compiled Python files)
+    - *.pyc              (bytecode files)
+    - db.sqlite3         (local database)
+    - .env               (secret keys)
+    - media/             (uploaded files)
+
+  Minimal .gitignore for Django:
+
+    venv/
+    __pycache__/
+    *.pyc
+    db.sqlite3
+    .env
+    media/
+
+  -----------------------------------------------
+
+  RULE 10 - Static Files Must Be Configured
+  ------------------------------------------
+  File: myproject/settings.py
+
+  For development:
+    STATIC_URL = '/static/'
+
+  For production (after collectstatic):
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+  Run this before deploying:
+    python manage.py collectstatic
+
+  Place static files in:
+    myapp/static/myapp/style.css
+
+  Load them in templates with:
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+
+===============================================
+  QUICK FILE STRUCTURE REFERENCE
+===============================================
+
+  myproject/                    <-- Project root
+  |
+  +-- manage.py                 <-- Django CLI entry point
+  |
+  +-- myproject/                <-- Project config package
+  |     +-- __init__.py
+  |     +-- settings.py         <-- All configuration
+  |     +-- urls.py             <-- Root URL dispatcher
+  |     +-- wsgi.py             <-- WSGI entry point
+  |     +-- asgi.py             <-- ASGI entry point
+  |
+  +-- myapp/                    <-- Your app
+        +-- __init__.py
+        +-- admin.py            <-- Register models for admin
+        +-- apps.py             <-- App config
+        +-- models.py           <-- Database models
+        +-- views.py            <-- Request handlers
+        +-- urls.py             <-- App-level URL patterns (CREATED MANUALLY)
+        +-- forms.py            <-- Forms (create manually if needed)
+        +-- tests.py            <-- Unit tests
+        +-- migrations/         <-- Auto-generated migration files
+        +-- templates/
+        |     +-- myapp/
+        |           +-- index.html
+        +-- static/
+              +-- myapp/
+                    +-- style.css
+
+===============================================

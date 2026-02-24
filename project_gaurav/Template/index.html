@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Gaurav | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6c63ff;
+            --secondary: #f64f59;
+            --accent: #43e97b;
+            --dark: #0a0a0f;
+            --dark2: #111118;
+            --card-bg: rgba(255,255,255,0.04);
+            --text: #f0f0f0;
+            --muted: #888;
+            --border: rgba(255,255,255,0.08);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+        /* ─── CANVAS BACKGROUND ─── */
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 60px;
+            background: rgba(10,10,15,0.75);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: padding 0.3s;
+        }
+
+        nav .logo {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        nav .nav-links { display: flex; gap: 10px; align-items: center; }
+
+        nav .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.25s;
+        }
+
+        nav .nav-links a:hover {
+            color: var(--text);
+            background: var(--card-bg);
+        }
+
+        nav .nav-links .btn-nav {
+            background: linear-gradient(135deg, var(--primary), #a78bfa);
+            color: white !important;
+            padding: 9px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        nav .nav-links .btn-nav:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.5);
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(108,99,255,0.15);
+            border: 1px solid rgba(108,99,255,0.35);
+            color: #a78bfa;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 7px 16px;
+            border-radius: 100px;
+            margin-bottom: 28px;
+            animation: fadeDown 0.8s ease both;
+        }
+
+        .hero-badge .dot {
+            width: 7px; height: 7px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%,100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.6; }
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 7vw, 88px);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            animation: fadeUp 0.9s ease 0.15s both;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, #c084fc 50%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: clamp(16px, 2vw, 20px);
+            color: var(--muted);
+            max-width: 580px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+            animation: fadeUp 0.9s ease 0.3s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeUp 0.9s ease 0.45s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #a78bfa);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 30px rgba(108,99,255,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -60%;
+            width: 60%; height: 200%;
+            background: rgba(255,255,255,0.15);
+            transform: skewX(-20deg);
+            transition: left 0.4s;
+        }
+
+        .btn-primary:hover::before { left: 130%; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(108,99,255,0.6); }
+
+        .btn-secondary {
+            color: var(--text);
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover { border-color: var(--primary); background: rgba(108,99,255,0.1); transform: translateY(-3px); }
+
+        /* ─── GLOW ORBS ─── */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: floatOrb 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .orb-1 { width: 400px; height: 400px; background: rgba(108,99,255,0.2); top: 10%; left: -5%; animation-delay: 0s; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(246,79,89,0.15); top: 20%; right: -5%; animation-delay: -3s; }
+        .orb-3 { width: 250px; height: 250px; background: rgba(67,233,123,0.1); bottom: 10%; left: 30%; animation-delay: -5s; }
+
+        @keyframes floatOrb {
+            0%,100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-40px) scale(1.08); }
+        }
+
+        /* ─── SCROLL INDICATOR ─── */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.4;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+
+        .scroll-arrow { width: 22px; height: 22px; border-right: 2px solid var(--text); border-bottom: 2px solid var(--text); transform: rotate(45deg); }
+
+        @keyframes bounce {
+            0%,100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* ─── STATS ─── */
+        .stats-section {
+            position: relative;
+            z-index: 1;
+            padding: 60px 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 2px;
+            background: rgba(255,255,255,0.02);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label { color: var(--muted); font-size: 13px; font-weight: 500; letter-spacing: 0.5px; }
+
+        /* ─── FEATURES ─── */
+        .features-section {
+            position: relative;
+            z-index: 1;
+            padding: 100px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: rgba(108,99,255,0.15);
+            color: #a78bfa;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 14px;
+        }
+
+        .section-header p { color: var(--muted); font-size: 16px; max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(108,99,255,0.06), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover { transform: translateY(-8px); border-color: rgba(108,99,255,0.4); box-shadow: 0 20px 60px rgba(108,99,255,0.15); }
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; position: relative; z-index: 1; }
+        .feature-card p { color: var(--muted); font-size: 14px; line-height: 1.7; position: relative; z-index: 1; }
+
+        .tag-pill {
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ─── TECH STACK ─── */
+        .tech-section {
+            position: relative;
+            z-index: 1;
+            padding: 80px 60px;
+            background: rgba(255,255,255,0.015);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tech-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+
+        .tech-inner h2 { font-size: 32px; font-weight: 800; margin-bottom: 40px; }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .tech-badge {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 22px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .tech-badge:hover { border-color: var(--primary); background: rgba(108,99,255,0.1); transform: translateY(-3px); }
+
+        /* ─── CTA SECTION ─── */
+        .cta-section {
+            position: relative;
+            z-index: 1;
+            padding: 100px 60px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; height: 300px;
+            background: radial-gradient(ellipse, rgba(108,99,255,0.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-section h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; }
+        .cta-section p { color: var(--muted); font-size: 17px; line-height: 1.7; margin-bottom: 40px; }
+
+        /* ─── FOOTER ─── */
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 30px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        footer .logo { font-size: 16px; font-weight: 800; background: linear-gradient(135deg, var(--primary), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        footer p { color: var(--muted); font-size: 13px; }
+        footer .footer-links { display: flex; gap: 20px; }
+        footer .footer-links a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        footer .footer-links a:hover { color: var(--text); }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── FPS COUNTER ─── */
+        #fps-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(10,10,15,0.82);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(14px);
+            border-radius: 10px;
+            padding: 7px 14px;
+            font-family: 'Inter', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+            pointer-events: none;
+            transition: border-color 0.3s;
+        }
+
+        #fps-counter .fps-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #43e97b;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+
+        #fps-counter .fps-value {
+            font-size: 14px;
+            font-weight: 900;
+            color: #43e97b;
+            transition: color 0.3s;
+            min-width: 26px;
+            text-align: right;
+        }
+
+        #fps-counter .fps-label {
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            nav { padding: 16px 20px; }
+            .hero, .features-section, .tech-section, .cta-section, footer { padding-left: 20px; padding-right: 20px; }
+            .stats-section { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PARTICLE CANVAS -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- ─── FPS COUNTER ─── -->
+<div id="fps-counter">
+    <div class="fps-dot"></div>
+    <span class="fps-value" id="fps-value">--</span>
+    <span class="fps-label">FPS &nbsp;·&nbsp; Django</span>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav id="navbar">
+    <span class="logo">⚡ Project Gaurav</span>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="#features">Features</a>
+        <a href="#tech">Tech Stack</a>
+        <a href="/aboutus" class="btn-nav">About Us →</a>
+    </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="hero-badge">
+        <span class="dot"></span>
+        Built with Django 6 · Python 3
+    </div>
+
+    <h1>
+        Build Something<br>
+        <span class="gradient-text">Extraordinary</span>
+    </h1>
+
+    <p>
+        Project Gaurav is a full-stack Django web application showcasing
+        modern URL routing, template rendering, model design, and clean architecture.
+    </p>
+
+    <div class="hero-cta">
+        <a href="#features" class="btn-primary">Explore Features →</a>
+        <a href="/aboutus" class="btn-secondary">Meet the Team</a>
+    </div>
+
+    <div class="scroll-indicator">
+        <span>Scroll</span>
+        <div class="scroll-arrow"></div>
+    </div>
+</section>
+
+<!-- ─── STATS ─── -->
+<div class="stats-section reveal">
+    <div class="stat-item">
+        <div class="stat-number" data-target="6">0</div>
+        <div class="stat-label">Django Version</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number" data-target="3">0</div>
+        <div class="stat-label">Python Version</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number" data-target="100">0</div>
+        <div class="stat-label">% Open Source</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number" data-target="0">0</div>
+        <div class="stat-label">Bugs (for now 😄)</div>
+    </div>
+</div>
+
+<!-- ─── FEATURES ─── -->
+<section class="features-section" id="features">
+    <div class="section-header reveal">
+        <div class="section-tag">What's Inside</div>
+        <h2>Everything You Need</h2>
+        <p>A solid Django foundation with all the essential building blocks ready to go.</p>
+    </div>
+
+    <div class="features-grid">
+
+        <div class="feature-card reveal" style="transition-delay:0.05s">
+            <div class="feature-icon" style="background: rgba(108,99,255,0.15);">🔗</div>
+            <h3>URL Routing</h3>
+            <p>Clean, named URL patterns with app-level namespacing. Organised project and app-level <code>urls.py</code> configs.</p>
+            <span class="tag-pill" style="background:rgba(108,99,255,0.15);color:#a78bfa;">urls.py</span>
+        </div>
+
+        <div class="feature-card reveal" style="transition-delay:0.1s">
+            <div class="feature-icon" style="background: rgba(246,79,89,0.15);">⚙️</div>
+            <h3>Views & Logic</h3>
+            <p>Function-based views that handle requests, process data, and return rendered responses to the browser.</p>
+            <span class="tag-pill" style="background:rgba(246,79,89,0.15);color:#fc8181;">views.py</span>
+        </div>
+
+        <div class="feature-card reveal" style="transition-delay:0.15s">
+            <div class="feature-icon" style="background: rgba(67,233,123,0.15);">🎨</div>
+            <h3>Template Engine</h3>
+            <p>Django's powerful template language with context passing, template inheritance, and static file loading.</p>
+            <span class="tag-pill" style="background:rgba(67,233,123,0.15);color:#68d391;">templates/</span>
+        </div>
+
+        <div class="feature-card reveal" style="transition-delay:0.2s">
+            <div class="feature-icon" style="background: rgba(251,191,36,0.15);">🗄️</div>
+            <h3>ORM & Models</h3>
+            <p>Django ORM translates Python model classes into database tables — no raw SQL needed for basic operations.</p>
+            <span class="tag-pill" style="background:rgba(251,191,36,0.15);color:#f6d860;">models.py</span>
+        </div>
+
+        <div class="feature-card reveal" style="transition-delay:0.25s">
+            <div class="feature-icon" style="background: rgba(99,179,237,0.15);">🛡️</div>
+            <h3>Admin Panel</h3>
+            <p>Auto-generated admin interface at <code>/admin/</code>. Register models to manage data without writing any extra code.</p>
+            <span class="tag-pill" style="background:rgba(99,179,237,0.15);color:#90cdf4;">admin.py</span>
+        </div>
+
+        <div class="feature-card reveal" style="transition-delay:0.3s">
+            <div class="feature-icon" style="background: rgba(236,72,153,0.15);">⚡</div>
+            <h3>Middleware</h3>
+            <p>Security, CSRF protection, session management, and authentication — all handled automatically by Django middleware.</p>
+            <span class="tag-pill" style="background:rgba(236,72,153,0.15);color:#f9a8d4;">settings.py</span>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── TECH STACK ─── -->
+<section class="tech-section" id="tech">
+    <div class="tech-inner">
+        <div class="section-tag reveal">Tech Stack</div>
+        <h2 class="reveal">Powered By</h2>
+        <div class="tech-badges reveal">
+            <div class="tech-badge">🐍 Python 3</div>
+            <div class="tech-badge">🎸 Django 6</div>
+            <div class="tech-badge">🗃️ SQLite</div>
+            <div class="tech-badge">🌐 HTML5</div>
+            <div class="tech-badge">🎨 CSS3</div>
+            <div class="tech-badge">🔒 CSRF Protection</div>
+            <div class="tech-badge">🔑 Django Auth</div>
+            <div class="tech-badge">📦 Django ORM</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section">
+    <div class="cta-glow"></div>
+    <div class="section-tag reveal">Ready to explore?</div>
+    <h2 class="reveal">Start Building Today</h2>
+    <p class="reveal">Dive into the project, explore the codebase, and use it as a foundation for your next Django application.</p>
+    <div class="hero-cta reveal">
+        <a href="/admin/" class="btn-primary">Open Admin Panel →</a>
+        <a href="/aboutus" class="btn-secondary">About the Project</a>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+    <span class="logo">⚡ Project Gaurav</span>
+    <p>© 2026 Project Gaurav · Built with ❤️ using Django</p>
+    <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/aboutus">About</a>
+        <a href="/admin/">Admin</a>
+    </div>
+</footer>
+
+<!-- ─── SCRIPTS ─── -->
+<script>
+    /* ── Particle Canvas ── */
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function createParticle() {
+        return {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 1.5 + 0.3,
+            dx: (Math.random() - 0.5) * 0.4,
+            dy: (Math.random() - 0.5) * 0.4,
+            alpha: Math.random() * 0.5 + 0.1
+        };
+    }
+
+    for (let i = 0; i < 120; i++) particles.push(createParticle());
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(108,99,255,${p.alpha})`;
+            ctx.fill();
+            p.x += p.dx;
+            p.y += p.dy;
+            if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        });
+
+        // Draw connecting lines
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(108,99,255,${0.08 * (1 - dist / 120)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    /* ── Scroll Reveal ── */
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ── Animated Counters ── */
+    function animateCounter(el) {
+        const target = parseInt(el.dataset.target);
+        const duration = 1800;
+        const step = target / (duration / 16);
+        let current = 0;
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) { current = target; clearInterval(timer); }
+            el.textContent = Math.floor(current) + (el.dataset.target === '100' ? '%' : '+');
+        }, 16);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.querySelectorAll('.stat-number').forEach(animateCounter);
+                counterObserver.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stats-section').forEach(el => counterObserver.observe(el));
+
+    /* ── Navbar Shrink on Scroll ── */
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('navbar');
+        if (window.scrollY > 60) {
+            nav.style.padding = '12px 60px';
+        } else {
+            nav.style.padding = '18px 60px';
+        }
+    });
+
+    /* ── Mouse Parallax on Orbs ── */
+    document.addEventListener('mousemove', (e) => {
+        const orbs = document.querySelectorAll('.orb');
+        const x = (e.clientX / window.innerWidth - 0.5) * 30;
+        const y = (e.clientY / window.innerHeight - 0.5) * 30;
+        orbs.forEach((orb, i) => {
+            const factor = (i + 1) * 0.4;
+            orb.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+        });
+    });
+
+    /* ── FPS Counter ── */
+    (function () {
+        const fpsValue = document.getElementById('fps-value');
+        const fpsDot   = document.querySelector('#fps-counter .fps-dot');
+        const fpsBox   = document.getElementById('fps-counter');
+        let lastTime = performance.now();
+        let frames = 0;
+
+        function updateFPS(now) {
+            frames++;
+            const delta = now - lastTime;
+            if (delta >= 500) {                        // update every 0.5 s
+                const fps = Math.round((frames / delta) * 1000);
+                fpsValue.textContent = fps;
+                frames = 0;
+                lastTime = now;
+
+                // colour-code: green ≥50, yellow ≥30, red <30
+                const color = fps >= 50 ? '#43e97b' : fps >= 30 ? '#f6d860' : '#f64f59';
+                fpsValue.style.color = color;
+                fpsDot.style.background = color;
+                fpsBox.style.borderColor = color + '55';
+            }
+            requestAnimationFrame(updateFPS);
+        }
+        requestAnimationFrame(updateFPS);
+    })();
+</script>
+
+</body>
+</html>
