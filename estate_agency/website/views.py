@@ -40,3 +40,13 @@ def property_single(request):
 
 def service_details(request):
     return render(request, 'service-details.html')
+
+from django.http import JsonResponse
+
+def data_fetching(request):
+    enquiries = enquiry_table.objects.all().order_by('-id')
+    return render(request, 'data_fetching.html', {'enquiries': enquiries})
+
+def api_enquiries(request):
+    enquiries = enquiry_table.objects.all().order_by('-id').values('name', 'email', 'phone', 'message')
+    return JsonResponse(list(enquiries), safe=False)

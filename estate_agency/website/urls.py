@@ -10,4 +10,6 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('property-single/', views.property_single, name='property_single'),
     path('service-details/', views.service_details, name='service_details'),
+    path('data-fetching/', views.data_fetching, name='data_fetching'),
+    path('api/enquiries/', views.api_enquiries, name='api_enquiries'),
 ]
