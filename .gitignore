@@ -10,3 +10,12 @@ venv/
 .vscode/
 static_root/
 media_root/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.swp
+*.bak
+*.tmp
